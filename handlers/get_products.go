@@ -2,11 +2,11 @@ package handlers
 
 import (
 	"net/http"
-	"sample-go/product"
+	"sample-go/database"
 	"sample-go/util"
 )
 
 func GetProducts(w http.ResponseWriter, r *http.Request) {
 
-	util.SentData(w, product.ProductList, http.StatusOK)
+	util.SentData(w, database.ProductList, http.StatusOK)
 }
