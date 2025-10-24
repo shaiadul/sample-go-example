@@ -84,10 +84,10 @@ func sentData(w http.ResponseWriter, data interface{}, statusCode int) {
 func main() {
 
 	router := http.NewServeMux()
-	router.HandleFunc("/products", getProducts)
-	router.HandleFunc("/products/create", createProduct)
-	router.HandleFunc("/about", handleAbout)
-	router.HandleFunc("/hello", handleHello)
+	router.Handle("GET /products", http.HandlerFunc(getProducts))
+	router.Handle("POST /products/create", http.HandlerFunc(createProduct))
+	router.Handle("GET /about", http.HandlerFunc(handleAbout))
+	router.Handle("GET /hello", http.HandlerFunc(handleHello))
 
 	fmt.Println("Server is running on port 8080")
 	err := http.ListenAndServe(":8080", router)
