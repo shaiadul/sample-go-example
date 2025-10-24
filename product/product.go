@@ -1,4 +1,4 @@
-package main
+package product
 
 type Product struct {
 	ID          int     `json:"id"` // if i use id is make privete then it will give error , if need small case then use tag
