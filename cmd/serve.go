@@ -5,14 +5,17 @@ import (
 	"net/http"
 	"sample-go/global_router"
 	"sample-go/handlers"
+	"sample-go/middleware"
 )
 
 func Serve() {
 	router := http.NewServeMux()
 
-	router.Handle("GET /products", http.HandlerFunc(handlers.GetProducts))
-	router.Handle("POST /products", http.HandlerFunc(handlers.CreateProduct))
-	router.Handle("GET /products/{id}", http.HandlerFunc(handlers.GetProductById))
+	router.Handle("GET /test", middleware.Logger(http.HandlerFunc(handlers.Test)))
+
+	router.Handle("GET /products", middleware.Logger(http.HandlerFunc(handlers.GetProducts)))
+	router.Handle("POST /products", middleware.Logger(http.HandlerFunc(handlers.CreateProduct)))
+	router.Handle("GET /products/{id}", middleware.Logger(http.HandlerFunc(handlers.GetProductById)))
 
 	globalRouter := global_router.GlobalRouter(router)
 
