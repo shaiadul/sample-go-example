@@ -12,7 +12,7 @@ func Logger(next http.Handler) http.Handler {
 
 		start := time.Now()
 
-		next.ServeHTTP(w, r)
+		next.ServeHTTP(w, r) // call the next handler
 
 		log.Println("::", r.Method, r.RequestURI, time.Since(start), "::")
 

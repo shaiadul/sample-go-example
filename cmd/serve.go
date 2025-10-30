@@ -11,7 +11,7 @@ import (
 func Serve() {
 	router := http.NewServeMux()
 
-	router.Handle("GET /test", middleware.Logger(http.HandlerFunc(handlers.Test)))
+	router.Handle("GET /test", middleware.Hudai(middleware.Logger(http.HandlerFunc(handlers.Test))))
 
 	router.Handle("GET /products", middleware.Logger(http.HandlerFunc(handlers.GetProducts)))
 	router.Handle("POST /products", middleware.Logger(http.HandlerFunc(handlers.CreateProduct)))
