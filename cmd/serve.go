@@ -4,18 +4,18 @@ import (
 	"fmt"
 	"net/http"
 	"sample-go/global_router"
-	"sample-go/handlers"
 	"sample-go/middleware"
 )
 
 func Serve() {
+
+	manager := middleware.NewManager()
+
+	manager.Use(middleware.Logger, middleware.Hudai)
+
 	router := http.NewServeMux()
 
-	router.Handle("GET /test", middleware.Hudai(middleware.Logger(http.HandlerFunc(handlers.Test))))
-
-	router.Handle("GET /products", middleware.Logger(http.HandlerFunc(handlers.GetProducts)))
-	router.Handle("POST /products", middleware.Logger(http.HandlerFunc(handlers.CreateProduct)))
-	router.Handle("GET /products/{id}", middleware.Logger(http.HandlerFunc(handlers.GetProductById)))
+	initRoutes(router, manager)
 
 	globalRouter := global_router.GlobalRouter(router)
 
