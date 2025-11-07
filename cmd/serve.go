@@ -3,24 +3,26 @@ package cmd
 import (
 	"fmt"
 	"net/http"
-	"sample-go/global_router"
 	"sample-go/middleware"
 )
 
 func Serve() {
 
+	router := http.NewServeMux()
+
 	manager := middleware.NewManager()
 
-	manager.Use(middleware.Logger, middleware.Hudai)
-
-	router := http.NewServeMux()
+	wrapperRouter := manager.WrapRouter(
+		router,
+		middleware.Logger,
+		middleware.PreFlight,
+		middleware.Cors,
+	)
 
 	initRoutes(router, manager)
 
-	globalRouter := global_router.GlobalRouter(router)
-
 	fmt.Println("Server is running on port 8080")
-	err := http.ListenAndServe(":8080", globalRouter)
+	err := http.ListenAndServe(":8080", wrapperRouter)
 	if err != nil {
 		fmt.Println("Error Starting Server", err)
 	}

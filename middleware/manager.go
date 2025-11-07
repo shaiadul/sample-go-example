@@ -27,8 +27,20 @@ func (mngr *Manager) With(next http.Handler, middlewares ...Middleware) http.Han
 		n = middleware(n)
 	}
 
-	for _, gloabalMiddleware := range mngr.globalMiddlewares {
-		n = gloabalMiddleware(n)
+	// for _, gloabalMiddleware := range mngr.globalMiddlewares {
+	// 	n = gloabalMiddleware(n)
+	// }
+
+	return n
+
+}
+
+func (mngr *Manager) WrapRouter(next http.Handler, middlewares ...Middleware) http.Handler {
+
+	n := next
+
+	for _, middleware := range middlewares {
+		n = middleware(n)
 	}
 
 	return n
