@@ -1,6 +1,6 @@
 package database
 
-var ProductList []Product
+var productList []Product
 
 type Product struct {
 	ID          int     `json:"id"` // if i use id is make privete then it will give error , if need small case then use tag
@@ -8,6 +8,44 @@ type Product struct {
 	Description string  `json:"description"`
 	Price       float32 `json:"price"`
 	ImgUrl      string  `json:"imgUrl"`
+}
+
+func Store(product Product) Product {
+	product.ID = len(productList) + 1
+	productList = append(productList, product)
+	return product
+}
+
+func List() []Product {
+	return productList
+}
+
+func Get(pid int) *Product {
+	for _, product := range productList {
+		if product.ID == pid {
+			return &product
+		}
+	}
+
+	return nil
+
+}
+
+func Update(product Product) {
+	for idx, p := range productList {
+		if p.ID == product.ID {
+			productList[idx] = product
+		}
+	}
+}
+
+func Delete(pid int) {
+	for idx, product := range productList {
+		if product.ID == pid {
+			productList = append(productList[:idx], productList[idx+1:]...)
+			break
+		}
+	}
 }
 
 func init() {
@@ -51,5 +89,5 @@ func init() {
 		ImgUrl:      "https://via.placeholder.com/150",
 	}
 
-	ProductList = append(ProductList, pro01, pro02, pro03, pro04, pro05)
+	productList = append(productList, pro01, pro02, pro03, pro04, pro05)
 }

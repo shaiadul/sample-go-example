@@ -1,9 +1,9 @@
-package cmd
+package rest
 
 import (
 	"net/http"
-	"sample-go/handlers"
-	"sample-go/middleware"
+	"sample-go/rest/handlers"
+	"sample-go/rest/middleware"
 )
 
 func initRoutes(router *http.ServeMux, manager *middleware.Manager) {
@@ -31,7 +31,21 @@ func initRoutes(router *http.ServeMux, manager *middleware.Manager) {
 	router.Handle(
 		"GET /products/{id}",
 		manager.With(
-			http.HandlerFunc(handlers.GetProductById),
+			http.HandlerFunc(handlers.GetProduct),
+		),
+	)
+
+	router.Handle(
+		"PUT /products/{id}",
+		manager.With(
+			http.HandlerFunc(handlers.UpdateProduct),
+		),
+	)
+
+	router.Handle(
+		"DELETE /products/{id}",
+		manager.With(
+			http.HandlerFunc(handlers.DeleteProduct),
 		),
 	)
 }
