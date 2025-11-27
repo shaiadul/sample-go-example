@@ -13,6 +13,7 @@ type Config struct {
 	Version     string
 	ServiceName string
 	HttpPort    int
+	JWTSecret   string
 }
 
 var configuration Config
@@ -48,10 +49,17 @@ func loadConfig() {
 		fmt.Println("prot must be a number")
 	}
 
+	jwtSecret := os.Getenv("JWT_SECRET")
+	if jwtSecret == "" {
+		log.Fatal("jwt secret is required")
+		os.Exit(1)
+	}
+
 	configuration = Config{
 		Version:     version,
 		ServiceName: serviceName,
 		HttpPort:    int(httpPortNum),
+		JWTSecret:   jwtSecret,
 	}
 
 }
