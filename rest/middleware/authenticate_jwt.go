@@ -6,11 +6,10 @@ import (
 	"encoding/base64"
 	"fmt"
 	"net/http"
-	"sample-go/config"
 	"strings"
 )
 
-func AuthenticateJWT(next http.Handler) http.Handler {
+func (m *Middlewares) AuthenticateJWT(next http.Handler) http.Handler {
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		header := r.Header.Get("Authorization")
@@ -44,9 +43,7 @@ func AuthenticateJWT(next http.Handler) http.Handler {
 
 		message := jwtHeader + "." + jwtPayload
 
-		cnf := config.GetConfig()
-
-		byteArrSecret := []byte(cnf.JWTSecret)
+		byteArrSecret := []byte(m.cnf.JWTSecret)
 		byteArrMessage := []byte(message)
 
 		h := hmac.New(sha256.New, byteArrSecret)

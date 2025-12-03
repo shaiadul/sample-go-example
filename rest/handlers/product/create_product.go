@@ -1,4 +1,4 @@
-package handlers
+package product
 
 import (
 	"encoding/json"
@@ -7,7 +7,7 @@ import (
 	"sample-go/util"
 )
 
-func CreateProduct(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) CreateProduct(w http.ResponseWriter, r *http.Request) {
 
 	var NewProduct database.Product
 	decoder := json.NewDecoder(r.Body)

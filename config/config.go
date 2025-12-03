@@ -16,7 +16,7 @@ type Config struct {
 	JWTSecret   string
 }
 
-var configuration Config
+var configuration *Config
 
 func loadConfig() {
 
@@ -55,7 +55,7 @@ func loadConfig() {
 		os.Exit(1)
 	}
 
-	configuration = Config{
+	configuration = &Config{
 		Version:     version,
 		ServiceName: serviceName,
 		HttpPort:    int(httpPortNum),
@@ -64,7 +64,9 @@ func loadConfig() {
 
 }
 
-func GetConfig() Config {
-	loadConfig()
+func GetConfig() *Config {
+	if configuration == nil {
+		loadConfig()
+	}
 	return configuration
 }

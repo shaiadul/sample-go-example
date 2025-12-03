@@ -5,11 +5,31 @@ import (
 	"net/http"
 	"os"
 	"sample-go/config"
+	"sample-go/rest/handlers/product"
+	"sample-go/rest/handlers/user"
 	"sample-go/rest/middleware"
 	"strconv"
 )
 
-func Start(cnf config.Config) {
+type Server struct {
+	cnf            *config.Config
+	productHandler *product.Handler
+	userHandler    *user.Handler
+}
+
+func NewSeever(
+	cnf *config.Config,
+	productHandler *product.Handler,
+	userHandler *user.Handler,
+) *Server {
+	return &Server{
+		cnf:            cnf,
+		productHandler: productHandler,
+		userHandler:    userHandler,
+	}
+}
+
+func (server *Server) Start() {
 
 	router := http.NewServeMux()
 
@@ -22,9 +42,11 @@ func Start(cnf config.Config) {
 		middleware.Cors,
 	)
 
-	initRoutes(router, manager)
+	// Define routes
+	server.productHandler.ProductRoutes(router, manager)
+	server.userHandler.RegisterRoutes(router, manager)
 
-	addr := ":" + strconv.Itoa(cnf.HttpPort)
+	addr := ":" + strconv.Itoa(server.cnf.HttpPort)
 	fmt.Println("Server is running on port:", addr)
 	err := http.ListenAndServe(addr, wrapperRouter)
 	if err != nil {

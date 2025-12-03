@@ -1,4 +1,4 @@
-package handlers
+package product
 
 import (
 	"net/http"
@@ -7,7 +7,7 @@ import (
 	"strconv"
 )
 
-func DeleteProduct(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) DeleteProduct(w http.ResponseWriter, r *http.Request) {
 	productId := r.PathValue("id")
 
 	pid, err := strconv.Atoi(productId)
