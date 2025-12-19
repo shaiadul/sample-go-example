@@ -2,7 +2,6 @@ package product
 
 import (
 	"net/http"
-	"sample-go/database"
 	"sample-go/util"
 	"strconv"
 )
@@ -10,14 +9,20 @@ import (
 func (h *Handler) DeleteProduct(w http.ResponseWriter, r *http.Request) {
 	productId := r.PathValue("id")
 
-	pid, err := strconv.Atoi(productId)
+	pId, err := strconv.Atoi(productId)
 	if err != nil {
-		http.Error(w, "Invalid product id", http.StatusBadRequest)
+		util.SentError(w, http.StatusBadRequest, "Invalid product id")
 		return
 	}
 
-	database.Delete(pid)
+	err = h.productRepo.Delete(pId)
+	if err != nil {
 
-	util.SentData(w, "Successfully deleted the product", http.StatusOK)
+		util.SentError(w, http.StatusInternalServerError, "Failed to delete the product")
+
+		return
+	}
+
+	util.SentData(w, http.StatusOK, "Successfully deleted the product")
 
 }

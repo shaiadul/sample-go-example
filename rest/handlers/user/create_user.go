@@ -4,23 +4,41 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"sample-go/database"
+	"sample-go/repo"
 	"sample-go/util"
 )
 
+type ReqCreateUser struct {
+	FirstName   string `json:"firstName"`
+	LastName    string `json:"lastName"`
+	Email       string `json:"email"`
+	Password    string `json:"password"`
+	IsShopOwner bool   `json:"isShopOwner"`
+}
+
 func (h *Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
-	var newUser database.User
+	var req ReqCreateUser
 
 	decoder := json.NewDecoder(r.Body)
-	err := decoder.Decode(&newUser)
+	err := decoder.Decode(&req)
 	if err != nil {
 		fmt.Println(err)
-		http.Error(w, "Please provide valid JSON data", http.StatusBadRequest)
+		util.SentError(w, http.StatusBadRequest, "Please provide valid JSON data")
 		return
 	}
 
-	createdUser := newUser.Store()
+	usr, err := h.userRepo.Create(repo.User{
+		FirstName:   req.FirstName,
+		LastName:    req.LastName,
+		Email:       req.Email,
+		Password:    req.Password,
+		IsShopOwner: req.IsShopOwner,
+	})
+	if err != nil {
+		util.SentError(w, http.StatusInternalServerError, "Error creating user")
+		return
+	}
 
-	util.SentData(w, createdUser, http.StatusCreated)
+	util.SentData(w, http.StatusCreated, usr)
 
 }

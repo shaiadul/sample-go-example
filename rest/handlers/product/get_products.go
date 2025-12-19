@@ -2,11 +2,14 @@ package product
 
 import (
 	"net/http"
-	"sample-go/database"
 	"sample-go/util"
 )
 
 func (h *Handler) GetProducts(w http.ResponseWriter, r *http.Request) {
-
-	util.SentData(w, database.List(), http.StatusOK)
+	productList, err := h.productRepo.List()
+	if err != nil {
+		util.SentError(w, http.StatusInternalServerError, "Error while fetching products")
+		return
+	}
+	util.SentData(w, http.StatusOK, productList)
 }
